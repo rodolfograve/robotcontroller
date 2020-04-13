@@ -1,0 +1,10 @@
+.vs/
+bin/
+obj/
+WebApplication1/
+Data/
+*.csproj.user
+/publish
+/WebUI/publish
+/_NCrunch_BudgetX.Blazor
+nCrunchTemp*

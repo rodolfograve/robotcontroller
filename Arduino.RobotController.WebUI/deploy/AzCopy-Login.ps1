@@ -1,0 +1,1 @@
+azcopy login --tenant-id a599a1f5-fa4f-4265-9ea5-fbe3bc64501d

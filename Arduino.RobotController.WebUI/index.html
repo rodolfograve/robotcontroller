@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Control my robot!</title>
+     
+    <!-- msal.js with a fallback to backup CDN -->
+    <script type="text/javascript" src="https://alcdn.msauth.net/lib/1.2.2/js/msal.js" integrity="sha384-n2/wxR+doMGeL8Lmj4kdPRfZBUg2d/OAVqaKCoHPWOfOs1HUFU3laBvp3gv/HBOu" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+      if(typeof Msal === 'undefined')document.write(unescape("%3Cscript src='https://alcdn.msftauth.net/lib/1.2.2/js/msal.js' type='text/javascript' integrity='sha384-n2/wxR+doMGeL8Lmj4kdPRfZBUg2d/OAVqaKCoHPWOfOs1HUFU3laBvp3gv/HBOu' crossorigin='anonymous'%3E%3C/script%3E"));
+    </script>
+
+    <!-- adding Bootstrap 4 for UI components  -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <a class="navbar-brand" href="/">Control My Robot!</a>
+      <div id="userDetailsDiv"></div>
+      <div class="btn-group ml-auto dropleft">
+        <button type="button" id="signOut" class="btn btn-success d-none" onclick="signOut()">Sign Out</button>
+      </div>
+    </nav>
+    <br>
+    <div class="container">
+        <div id="unauthenticatedActionsDiv">
+          <p>You need to <button type="button" id="signIn" class="btn btn-secondary" onclick="signIn()">Sign In</button> before you can Control My Robot</p>
+        </div>
+        <div id="authenticatedActionsDiv" class="d-none">
+          <button class="btn btn-primary" onclick="putMessage('Buzz')">Buzz</button>
+          <button class="btn btn-warning" onclick="putMessage('LedOn')">Led On</button>
+          <button class="btn btn-info" onclick="putMessage('LedOff')">Led Off</button>
+      </div>
+    </div>
+
+    <!-- importing app scripts (load order is important) -->
+    <script type="text/javascript" src="./index.js"></script>
+    <script type="text/javascript" src="./authRedirect.js"></script>  
+  </body>
+</html>
