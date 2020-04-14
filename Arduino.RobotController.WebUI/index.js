@@ -5,7 +5,7 @@ const authenticatedActionsDiv = document.getElementById("authenticatedActionsDiv
 const signInButton = document.getElementById("signIn");
 const signOutButton = document.getElementById("signOut");
 
-const redirectUri = window.location.href.includes("localhost") ? "http://localhost:5500" : "https://ghostrobotcontroller.dev.rodolfograve.com/"
+const redirectUri = window.location.href.includes("localhost") ? "http://localhost:5500" : "https://ghostrobotcontroller.rodolfograve.com/"
 
 // Config object to be passed to Msal on creation.
 // For a full list of msal.js configuration parameters, 
