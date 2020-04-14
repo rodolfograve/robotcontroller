@@ -23,18 +23,13 @@ It is possible to add network connectivity to the Arduino itself, but that requi
 Secret settings are dealt with using *dotnet core user-secret*.
 
 # Arduino.RobotController.WebUI
-A static web application (no server-side code) to put commands in the queue
+A static web application (no server-side code) to put commands in the queue.
 
-Uses implicit flow and on-behalf-of (scope https://storage.azure.com/user_impersonation) so that **no secrets** are required.
+Uses implicit flow and on-behalf-of (scope https://storage.azure.com/user_impersonation) so that **no secrets** are required. Only users with the right permissions will be able to put commands in the queue.
 
-Only users with the right permissions will be able to put commands in the queue.
-
-This web application can run locally, but I have also hosted it in an Azure Storage Account using the [Static Web feature](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-static-website).
+This web application can run locally, but I have also hosted it in an Azure Storage Account using the [Static Web feature](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-static-website) and [Azure CDN](https://azure.microsoft.com/en-gb/services/cdn/), and is only available via HTTPS.
   
 *The reason the projects use **Robot** in the name is because I intend to improve the circuitry and the Arduino program to control more advanced actuators and sensors, ultimately turning it into something close to a fun robot*
-
-# Known issues
-Because I am using Azure Storage's Static Web site and a custom DNS, there is an HTTPS warning during the sign-in process. The solution seems to be to use [Azure CDN](https://azure.microsoft.com/en-gb/services/cdn/), which I intend to do at some point.
 
 # Notes
 All in all, even though the idea is quite simple, this project does include some non-trivial concepts.
