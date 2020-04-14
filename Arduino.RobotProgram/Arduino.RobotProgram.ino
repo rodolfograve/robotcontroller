@@ -41,7 +41,7 @@ void loop() {
     Serial.println("Received: " + latestCommand);
 
     if (latestCommand == "Buzz") {
-      buzz(2, 30);
+      buzz(2, 700);
     }
     else if (latestCommand == "LedOn") {
       ledOn();
