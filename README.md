@@ -31,6 +31,9 @@ This web application can run locally, but I have also hosted it in an Azure Stor
   
 *The reason the projects use **Robot** in the name is because I intend to improve the circuitry and the Arduino program to control more advanced actuators and sensors, ultimately turning it into something close to a fun robot*
 
+# Known Issues
+If multiple commands are sent in quick succession they will get mixed up in the Arduino and won't be processed correctly. Possible solutions are to either send a correlated acknowledgement from the Arduino to the CommandGateway, or even better, to improve the parsing logic in the Arduino so that it's able to handle multiple commands concatenated.
+
 # Notes
 All in all, even though the idea is quite simple, this project does include some non-trivial concepts.
 
