@@ -43,3 +43,4 @@ These are some of the links I have found useful:
 1. https://docs.microsoft.com/en-us/rest/api/storageservices/queue-service-error-codes
 1. https://docs.microsoft.com/en-us/rest/api/storageservices/queue-service-rest-api
 1. https://docs.microsoft.com/en-us/rest/api/storageservices/protocol-version-support-for-.net-client-library-versions
+1. https://arlanblogs.alvarnet.com/azure-static-website-setup-error-this-xml-file-does-not-appear-to-have-any-style-information-associated-with-it/
