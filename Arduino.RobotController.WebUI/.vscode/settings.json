@@ -2,7 +2,7 @@
     "liveServer.settings.host": "localhost",
     "liveServer.settings.port": 5500,
     "liveServer.settings.CustomBrowser": "chrome:PrivateMode",
-    "liveServer.settings.AdvanceCustomBrowserCmdLine": "chrome --incognito --remote-debugging-port=9222",
+    "liveServer.settings.AdvanceCustomBrowserCmdLine": "chrome --remote-debugging-port=9222",
     "liveServer.settings.NoBrowser": false,
     "liveServer.settings.ignoreFiles": [
         ".vscode/**",

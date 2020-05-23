@@ -13,6 +13,12 @@
 
     <!-- adding Bootstrap 4 for UI components  -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <style>
+      .btn-command {
+        width: 250px;
+      }
+    </style>
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -28,10 +34,23 @@
           <p>You need to <button type="button" id="signIn" class="btn btn-secondary" onclick="signIn()">Sign In</button> before you can Control My Robot</p>
         </div>
         <div id="authenticatedActionsDiv" class="d-none">
-          <button class="btn btn-warning" onclick="putMessage('LedOn')">Led On <img src="images/on.png" /></button>
-          <button class="btn btn-info" onclick="putMessage('LedOff')">Led Off <img src="images/off.png" /></button>
-          <button class="btn btn-primary" onclick="putMessage('Buzz')">Buzz <img src="images/speaker.png" /></button>
-          <button class="btn btn-primary" onclick="putMessage('UseKeyPad')" style="margin-left: 150px;">Swith to KeyPad <img src="images/keypad.png" /></button>
+          <div id="controls-misc">
+            <button class="btn btn-warning btn-command" onclick="putMessage('LedOn')">Led On <img src="images/on.png" /></button>
+            <button class="btn btn-info btn-command" onclick="putMessage('LedOff')">Led Off <img src="images/off.png" /></button>
+            <button class="btn btn-primary btn-command" onclick="putMessage('Buzz')">Buzz <img src="images/speaker.png" /></button>
+          </div>
+          <div id="controls-robot-left" style="margin-top: 30px;">
+            <button class="btn btn-warning btn-command" onclick="putMessage('LeftArmUp')">Left Arm Up <img src="images/robot.png" height="50px" /></button>
+            <button class="btn btn-warning btn-command" onclick="putMessage('RightArmUp')">Right Arm Up <img src="images/robot.png" height="50px" /></button>
+          </div>
+          <div id="controls-robot-right" style="margin-top: 30px;">
+            <button class="btn btn-info btn-command" onclick="putMessage('LeftArmDown')">Left Arm Down <img src="images/robot.png" height="50px" /></button>
+            <button class="btn btn-info btn-command" onclick="putMessage('RightArmDown')">Right Arm Down <img src="images/robot.png" height="50px" /></button>
+          </div>
+
+          <div id="controls-switch" style="margin-top: 30px;">
+            <button class="btn btn-primary btn-command" onclick="putMessage('UseKeyPad')" style="margin-left: 150px;">Swith to KeyPad <img src="images/keypad.png" /></button>
+          </div>
       </div>
     </div>
     

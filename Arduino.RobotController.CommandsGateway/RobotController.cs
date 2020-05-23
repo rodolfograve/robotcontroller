@@ -10,7 +10,7 @@ namespace Arduino.RobotController.CommandsGateway
         /// <summary>
         /// Make sure only recognised commands are passed on the Arduino. This introduces extra work but makes it impossible to "attack" the device with long strings, etc.
         /// </summary>
-        private static readonly ImmutableHashSet<string> CommandsWhiteList = ImmutableHashSet.CreateRange(new[] { "Buzz", "LedOn", "LedOff", "UseKeyPad" });
+        private static readonly ImmutableHashSet<string> CommandsWhiteList = ImmutableHashSet.CreateRange(new[] { "Buzz", "LedOn", "LedOff", "UseKeyPad", "LeftArmUp", "LeftArmDown", "RightArmUp", "RightArmDown" });
 
         public RobotController(string serialPort)
         {
@@ -29,6 +29,7 @@ namespace Arduino.RobotController.CommandsGateway
                     SerialPort.Open();
                 }
                 SerialPort.WriteLine(command);
+
                 errorMessage = "";
 
                 Thread.Sleep(1000);
@@ -36,7 +37,7 @@ namespace Arduino.RobotController.CommandsGateway
             }
             else
             {
-                errorMessage = $"Unrecognised command: {command}";
+                errorMessage = $"Command is not whitelisted for remote execution: {command}";
                 return false;
             }
         }

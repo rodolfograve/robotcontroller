@@ -1,4 +1,5 @@
 #include <Keypad.h>
+#include <Servo.h>
 
 const int sensorAnalogPin = A0;       // Select the Arduino input pin to accept the Sound Sensor's analog output 
 const int sensorDigitalPin = 4;       // Select the Arduino input pin to accept the Sound Sensor's digital output
@@ -25,14 +26,28 @@ byte colPins[COLS] = {5, 4, 3, 2}; //connect to the column pinouts of the keypad
 //initialize an instance of class NewKeypad
 Keypad customKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); 
 
+Servo leftArmServo;
+Servo rightArmServo;
+int leftArmServoAngle = 0;
+int rightArmServoAngle = 0;
+const int armStep = 50;
+
 String latestCommand = "";
 String currentMode = "KeyPad";
+
+int loopControl = 0;
                               
 void setup() {
+  currentMode = "KeyPad";
+  loopControl = 0;
   Serial.begin(9600);               // The IDE settings for Serial Monitor/Plotter (preferred) must match this speed
   pinMode(sensorDigitalPin,INPUT);  // Define pin 7 as an input port, to accept digital input
   pinMode(Led13,OUTPUT);            // Define LED13 as an output port, to indicate digital trigger reached
   pinMode(buzzer,OUTPUT);//initialize the buzzer pin as an output
+  leftArmServo.attach(10);
+  rightArmServo.attach(11);
+  leftArmServo.write(40);
+  rightArmServo.write(40);
 }
 
 void loop() {
@@ -54,22 +69,46 @@ void loop() {
       else if (latestCommand == "UseKeyPad") {
         setModeKeyPad();
       }
+      else if (latestCommand == "LeftArmUp") {
+        turnLeftArmNegative(armStep);
+      }
+      else if (latestCommand == "LeftArmDown") {
+        turnLeftArmPositive(armStep);
+      }
+      else if (latestCommand == "RightArmUp") {
+        turnRightArmNegative(armStep);
+      }
+      else if (latestCommand == "RightArmDown") {
+        turnRightArmPositive(armStep);
+      }
       else {
-        log("Unknown command: " + latestCommand);
+        log("Unknown remote command: " + latestCommand);
       }
     }
   }
   else {
     char customKey = getKeypadKey();
     if (customKey) {
+      log("KeyPressed: " + customKey);
       switch (customKey) {
         case '1': ledOn(); beep(1); break;
         case '2': ledOff(); break;
         case '3': buzz(2, 700); break;
+        case '4': resetLeftArm(); break;
+        case '5': turnLeftArmPositive(armStep); break;
+        case '6': turnLeftArmNegative(armStep); break;
+        case '7': resetRightArm(); break;
+        case '8': turnRightArmPositive(armStep); break;
+        case '9': turnRightArmNegative(armStep); break;
         case 'D': setModeRemote(); break;
         default: log("No action for key " + customKey);
       }
     }
+  }
+  loopControl++;
+  if (loopControl >= 30000) {
+    log("Current mode is " + currentMode);
+    loopControl = 0;
   }
 }
 
@@ -114,10 +153,48 @@ void buzz(int frequency, unsigned char length) {
 
 void setModeRemote() {
   currentMode = "Remote";
+  log("Switched to Remote mode");
 }
 
 void setModeKeyPad() {
   currentMode = "KeyPad";
+  log("Switched to KeyPad mode");
+}
+
+void turnLeftArmPositive(int step) {
+  turnServoPositive(leftArmServo, step);
+}
+
+void turnLeftArmNegative(int step) {
+  turnServoNegative(leftArmServo, step);
+}
+
+void resetLeftArm() {
+  resetServo(leftArmServo);
+}
+
+void turnRightArmPositive(int step) {
+  turnServoPositive(rightArmServo, step);
+}
+
+void turnRightArmNegative(int step) {
+  turnServoNegative(rightArmServo, step);
+}
+
+void resetRightArm() {
+  resetServo(rightArmServo);
+}
+
+void turnServoPositive(Servo servo, int step) {
+  servo.write(servo.read() + step);
+}
+
+void turnServoNegative(Servo servo, int step) {
+  servo.write(servo.read() - step);
+}
+
+void resetServo(Servo servo) {
+  servo.write(0);
 }
 
 void log(String message) {
