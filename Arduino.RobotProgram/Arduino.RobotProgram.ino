@@ -26,6 +26,7 @@ byte colPins[COLS] = {5, 4, 3, 2}; //connect to the column pinouts of the keypad
 Keypad customKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); 
 
 String latestCommand = "";
+String currentMode = "KeyPad";
                               
 void setup() {
   Serial.begin(9600);               // The IDE settings for Serial Monitor/Plotter (preferred) must match this speed
@@ -35,34 +36,41 @@ void setup() {
 }
 
 void loop() {
-  if (Serial.available() > 0) {
-    latestCommand = Serial.readString();
-    latestCommand.replace("\n", "");
-    Serial.println("Received: " + latestCommand);
-
-    if (latestCommand == "Buzz") {
-      buzz(2, 700);
-    }
-    else if (latestCommand == "LedOn") {
-      ledOn();
-    }
-    else if (latestCommand == "LedOff") {
-      ledOff();
-    }
-    else {
-      Serial.println("Unknown command: " + latestCommand);
-    }
-  }
-/*
-  char customKey = getKeypadKey();
-  if (customKey) {
-    switch (customKey) {
-      case '1': ledOn(); beep(1); break;
-      case '2': ledOff(); break;
-      default: buzz(2, 30);
+  if (currentMode == "Remote") {
+    if (Serial.available() > 0) {
+      latestCommand = Serial.readString();
+      latestCommand.replace("\n", "");
+      Serial.println("Received: " + latestCommand);
+  
+      if (latestCommand == "Buzz") {
+        buzz(2, 700);
+      }
+      else if (latestCommand == "LedOn") {
+        ledOn();
+      }
+      else if (latestCommand == "LedOff") {
+        ledOff();
+      }
+      else if (latestCommand == "UseKeyPad") {
+        setModeKeyPad();
+      }
+      else {
+        log("Unknown command: " + latestCommand);
+      }
     }
   }
-*/
+  else {
+    char customKey = getKeypadKey();
+    if (customKey) {
+      switch (customKey) {
+        case '1': ledOn(); beep(1); break;
+        case '2': ledOff(); break;
+        case '3': buzz(2, 700); break;
+        case 'D': setModeRemote(); break;
+        default: log("No action for key " + customKey);
+      }
+    }
+  }
 }
 
 void ledOn() {
@@ -102,4 +110,16 @@ void buzz(int frequency, unsigned char length) {
     digitalWrite(buzzer,LOW);
     delay(frequency);
   }
+}
+
+void setModeRemote() {
+  currentMode = "Remote";
+}
+
+void setModeKeyPad() {
+  currentMode = "KeyPad";
+}
+
+void log(String message) {
+  Serial.println("LOG: " + message);
 }

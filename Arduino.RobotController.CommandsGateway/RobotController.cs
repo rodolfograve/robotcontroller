@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Immutable;
 using System.IO.Ports;
+using System.Threading;
 
 namespace Arduino.RobotController.CommandsGateway
 {
     public class RobotController
     {
-        private static readonly ImmutableHashSet<string> ValidCommands = ImmutableHashSet.CreateRange(new[] { "Buzz", "LedOn", "LedOff" });
+        /// <summary>
+        /// Make sure only recognised commands are passed on the Arduino. This introduces extra work but makes it impossible to "attack" the device with long strings, etc.
+        /// </summary>
+        private static readonly ImmutableHashSet<string> CommandsWhiteList = ImmutableHashSet.CreateRange(new[] { "Buzz", "LedOn", "LedOff", "UseKeyPad" });
 
         public RobotController(string serialPort)
         {
@@ -18,7 +22,7 @@ namespace Arduino.RobotController.CommandsGateway
 
         public bool TrySendCommand(string command, out string errorMessage)
         {
-            if (ValidCommands.Contains(command))
+            if (CommandsWhiteList.Contains(command))
             {
                 if (!SerialPort.IsOpen)
                 {
@@ -26,6 +30,8 @@ namespace Arduino.RobotController.CommandsGateway
                 }
                 SerialPort.WriteLine(command);
                 errorMessage = "";
+
+                Thread.Sleep(1000);
                 return true;
             }
             else
