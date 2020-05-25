@@ -1,14 +1,10 @@
 #include <Keypad.h>
 #include <Servo.h>
 
-const int sensorAnalogPin = A0;       // Select the Arduino input pin to accept the Sound Sensor's analog output 
-const int sensorDigitalPin = 4;       // Select the Arduino input pin to accept the Sound Sensor's digital output
-int digitalValue;                     // Define variable to store the digital value coming from the Sound Sensor
+// PIN Assignments
 int Led13 = 13;                       // Define LED port; this is the LED built in to the Arduino (labled L)
-                                      // When D0 from the Sound Sensor (connnected to pin 7 on the
-                                      // Arduino) sends High (voltage present), L will light. In practice, you
-                                      // should see LED13 on the Arduino blink when LED2 on the Sensor is 100% lit.
-int buzzer = 12;                      //the pin of the active buzzer
+int buzzer = 12;
+int IRSensor = 8;
 
 // Keypad
 const byte ROWS = 4; //four rows
@@ -40,10 +36,10 @@ int loopControl = 0;
 void setup() {
   currentMode = "KeyPad";
   loopControl = 0;
-  Serial.begin(9600);               // The IDE settings for Serial Monitor/Plotter (preferred) must match this speed
-  pinMode(sensorDigitalPin,INPUT);  // Define pin 7 as an input port, to accept digital input
-  pinMode(Led13,OUTPUT);            // Define LED13 as an output port, to indicate digital trigger reached
-  pinMode(buzzer,OUTPUT);//initialize the buzzer pin as an output
+  Serial.begin(9600); // The IDE settings for Serial Monitor/Plotter (preferred) must match this speed
+  pinMode(Led13, OUTPUT);
+  pinMode(buzzer, OUTPUT);
+  pinMode(IRSensor, INPUT);
   leftArmServo.attach(10);
   rightArmServo.attach(11);
   leftArmServo.write(40);
@@ -51,7 +47,7 @@ void setup() {
 }
 
 void loop() {
-  if (currentMode == "Remote") {
+  if (currentMode == "AllowRemote") {
     if (Serial.available() > 0) {
       latestCommand = Serial.readString();
       latestCommand.replace("\n", "");
@@ -86,25 +82,29 @@ void loop() {
       }
     }
   }
-  else {
-    char customKey = getKeypadKey();
-    if (customKey) {
-      log("KeyPressed: " + customKey);
-      switch (customKey) {
-        case '1': ledOn(); beep(1); break;
-        case '2': ledOff(); break;
-        case '3': buzz(2, 700); break;
-        case '4': resetLeftArm(); break;
-        case '5': turnLeftArmPositive(armStep); break;
-        case '6': turnLeftArmNegative(armStep); break;
-        case '7': resetRightArm(); break;
-        case '8': turnRightArmPositive(armStep); break;
-        case '9': turnRightArmNegative(armStep); break;
-        case 'D': setModeRemote(); break;
-        default: log("No action for key " + customKey);
-      }
+  
+  char customKey = getKeypadKey();
+  if (customKey) {
+    log("KeyPressed: " + customKey);
+    switch (customKey) {
+      case '1': ledOn(); beep(1); break;
+      case '2': ledOff(); break;
+      case '3': buzz(2, 700); break;
+      case '4': resetLeftArm(); break;
+      case '5': turnLeftArmPositive(armStep); break;
+      case '6': turnLeftArmNegative(armStep); break;
+      case '7': resetRightArm(); break;
+      case '8': turnRightArmPositive(armStep); break;
+      case '9': turnRightArmNegative(armStep); break;
+      case 'A': setModeRemote(); break;
+      case 'D': setModeKeyPad(); break;
+      default: log("No action for key " + customKey);
     }
   }
+
+  int irSensorStatus = digitalRead(IRSensor);
+  log("IR Sensor Status: " + irSensorStatus);
+  
   loopControl++;
   if (loopControl >= 30000) {
     log("Current mode is " + currentMode);
@@ -129,12 +129,6 @@ char getKeypadKey() {
   return customKey;
 }
 
-int getSoundSensorAnalogValue() {
-  int result = analogRead(sensorAnalogPin); // Read the value of the analog interface A0 assigned to digitalValue 
-  Serial.println(result); // Send the analog value to the serial transmit interface
-  return result;
-}
-
 void beep(int frequency) {
   buzz(frequency, 30);
 }
@@ -152,7 +146,7 @@ void buzz(int frequency, unsigned char length) {
 }
 
 void setModeRemote() {
-  currentMode = "Remote";
+  currentMode = "AllowRemote";
   log("Switched to Remote mode");
 }
 
